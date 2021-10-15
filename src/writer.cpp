@@ -2,7 +2,7 @@
 
 int	run_groff(std::string &towrite, char **env, int *fdin, int *fdout)
 {
-	char *args[4] = {(char *)"/bin/groff", (char *)"-man", (char *)"-Tascii", 0};
+	char *args[4] = {(char *)"/bin/groff", (char *)"-man", (char *)"-Tutf8", 0};
 	pid_t id;
 
 	if (dup2(fdin[PIPE_RD], STDIN_FILENO) == -1)
@@ -44,16 +44,12 @@ int	run_groff(std::string &towrite, char **env, int *fdin, int *fdout)
 
 int	run_less(char **env, int *fd)
 {
-	char *args[2] = {(char *)"/bin/less", 0};
+	char *args[3] = {(char *)"/bin/less", (char *)"-R", 0};
 	if (dup2(fd[PIPE_RD], STDIN_FILENO) == -1)
 	{
 		std::cerr << "syscalls forks failed!" << std::endl;
 		exit(-1);
 	}
-	//std::string s;
-	//s.resize(1000);
-	//read(STDIN_FILENO, &s[0], 1000);
-	//std::cerr << "string.." <<  s << std::endl;
 	pid_t id = fork();
 	if (id == 0)
 	{

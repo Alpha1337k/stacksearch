@@ -8,6 +8,10 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include "../rapidjson-1.1.0/include/rapidjson/document.h"
+#include "../rapidjson-1.1.0/include/rapidjson/writer.h"
+#include "../rapidjson-1.1.0/include/rapidjson/stringbuffer.h"
+#include <ctime>
 
 #define PIPE_WR 1
 #define PIPE_RD 0
@@ -23,19 +27,23 @@ private:
 	};
 	
 
-	std::string *tags;
+	std::vector<std::string> tags;
 	std::string link;
 	std::string title;
 	std::string question;
 	std::vector<answer> answers;
 
+	std::string sanitizeInput(std::string s);
 public:
 	Query(/* args */);
+	Query(rapidjson::Value::Object o);
 	~Query();
+	void		ParseQuestionMeta(rapidjson::Value::Object o);
+	void		ParseAnswers(rapidjson::Value::Object o);
 	std::string Create();
 };
 
 
 int	display_page(std::string &towrite, char **env);
-
+void test();
 #endif
