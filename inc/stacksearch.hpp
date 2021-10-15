@@ -13,6 +13,7 @@
 #include "../rapidjson-1.1.0/include/rapidjson/stringbuffer.h"
 #include <ctime>
 
+
 #define PIPE_WR 1
 #define PIPE_RD 0
 
@@ -22,6 +23,7 @@ private:
 	struct answer
 	{
 		int upvotes;
+		bool		is_accepted;
 		std::string response;
 		std::string name;
 	};
@@ -45,5 +47,6 @@ public:
 
 
 int	display_page(std::string &towrite, char **env);
+std::string getQuery(std::string param, char **env);
 void test();
 #endif

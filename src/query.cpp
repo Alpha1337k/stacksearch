@@ -16,7 +16,7 @@ std::string Query::Create()
 	{
 		for (size_t i = 0; i < answers.size(); i++)
 		{
-			rval += ".SS [" + std::to_string(answers[i].upvotes) + "] " + answers[i].name + "\n";
+			rval += ".SS [" + std::to_string(answers[i].upvotes) + "] " + answers[i].name + " " + (answers[i].is_accepted ? "!" : "") + "\n";
 			rval += answers[i].response + "\n"; 
 		}
 	}

@@ -18,6 +18,16 @@ void		Query::ParseQuestionMeta(rapidjson::Value::Object o)
 	{
 		tags.push_back(o["tags"][i].GetString());
 	}
+	question	= sanitizeInput(o["body"].GetString());
+	for (size_t i = 0; i < o["answers"].GetArray().Size(); i++)
+	{
+		answer a;
+		a.name = o["answers"][i]["owner"]["display_name"].GetString();
+		a.response = sanitizeInput(o["answers"][i]["body"].GetString());
+		a.upvotes = o["answers"][i]["score"].GetInt();
+		a.is_accepted = o["answers"][i]["is_accepted"].GetBool();
+		answers.push_back(a);
+	}	
 }
 
 void		findAndReplaceAll(std::string &s, std::string tofind, std::string toreplace)
@@ -67,19 +77,19 @@ std::string	Query::sanitizeInput(std::string s)
 	return s;
 }
 
-void	Query::ParseAnswers(rapidjson::Value::Object o)
-{
-	question	= sanitizeInput(o["body"].GetString());
-	title		= o["title"].GetString();
+//void	Query::ParseAnswers(rapidjson::Value::Object o)
+//{
+//	question	= sanitizeInput(o["body"].GetString());
+//	title		= o["title"].GetString();
 
-	for (size_t i = 0; i < o["answers"].GetArray().Size(); i++)
-	{
-		answer a;
-		a.name = o["answers"][i]["owner"]["display_name"].GetString();
-		a.response = sanitizeInput(o["answers"][i]["body"].GetString());
-		a.upvotes = o["answers"][i]["score"].GetInt();
+//	for (size_t i = 0; i < o["answers"].GetArray().Size(); i++)
+//	{
+//		answer a;
+//		a.name = o["answers"][i]["owner"]["display_name"].GetString();
+//		a.response = sanitizeInput(o["answers"][i]["body"].GetString());
+//		a.upvotes = o["answers"][i]["score"].GetInt();
 
-		answers.push_back(a);
-	}
+//		answers.push_back(a);
+//	}
 	
-}
+//}

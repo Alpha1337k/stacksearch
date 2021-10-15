@@ -48,25 +48,27 @@ int main(int argc, char **argv, char **env)
 	}
 	(void)argv;
 	
+	std::string api_rv = getQuery(argv[1], env);
+
 	rapidjson::Document d;
-	d.Parse(getQuestions("").c_str());
+	d.Parse(api_rv.c_str());
 
 
 	for (size_t i = 0; i < d["items"].GetArray().Size(); i++)
 	{
-		Query a(d["items"][0].GetObject());
-		rapidjson::Document answersDom;
-		answersDom.Parse(getAnswers("").c_str());
-		a.ParseAnswers(answersDom["items"][0].GetObject());
+		Query a(d["items"][i].GetObject());
+		//rapidjson::Document answersDom;
+		//answersDom.Parse(getAnswers("").c_str());
+		//a.ParseAnswers(answersDom["items"][0].GetObject());
 
 		std::string page = a.Create();
 
-		std::cout << std::time(0) << std::endl;
+		//std::cout << std::time(0) << std::endl;
 		//std::cerr << page << std::endl;
 
 		display_page(page, env);
 
-		std::cout << std::time(0) << std::endl;
+		//std::cout << std::time(0) << std::endl;
 
 		std::cout << "Press 'Q' to quit, 'C' to proceed to next entry" << std::endl;
 
