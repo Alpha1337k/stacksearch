@@ -26,20 +26,42 @@ void		findAndReplaceAll(std::string &s, std::string tofind, std::string toreplac
 	while ((pos =s.find(tofind)) != std::string::npos)
 	{
 		s.replace(pos, tofind.length(), toreplace);
+		pos += toreplace.length();
+		if (s.find_first_not_of(' ', pos) != pos)
+		{
+			s.replace(pos, s.find_first_not_of(' ', pos) - pos, "");
+		}
 	}
 }
 
 std::string	Query::sanitizeInput(std::string s)
 {
-	findAndReplaceAll(s, "<code>", "\e[01;31m");
-	findAndReplaceAll(s, "</code>", "\e[0m");
+	findAndReplaceAll(s, "\n\n", "");
+	 // i want color but i doenst work..
+	findAndReplaceAll(s, "<code>", "\n.I ");
+	findAndReplaceAll(s, "</code>", "\n");
+	findAndReplaceAll(s, "<p>", "");
+	findAndReplaceAll(s, "</p>", "\n");
+
+	findAndReplaceAll(s, "</a>", "");
+
+	/* list */
+	findAndReplaceAll(s, "<ul>", "");
+	findAndReplaceAll(s, "</ul>", "");
+	findAndReplaceAll(s, "<li>", "- ");
+	findAndReplaceAll(s, "</li>", "\n");
+
+	/* pre */
+	findAndReplaceAll(s, "<pre>", ".SM");
+	findAndReplaceAll(s, "</pre>", "\n");	
+
 
 	return s;
 }
 
 void	Query::ParseAnswers(rapidjson::Value::Object o)
 {
-	question	= o["body"].GetString();
+	question	= sanitizeInput(o["body"].GetString());
 	title		= o["title"].GetString();
 
 	for (size_t i = 0; i < 1; i++)
