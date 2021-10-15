@@ -52,9 +52,17 @@ std::string	Query::sanitizeInput(std::string s)
 	findAndReplaceAll(s, "</li>", "\n");
 
 	/* pre */
-	findAndReplaceAll(s, "<pre>", ".SM");
-	findAndReplaceAll(s, "</pre>", "\n");	
+	findAndReplaceAll(s, "<pre>", "\n.B ");
+	findAndReplaceAll(s, "</pre>", "\n");
 
+	findAndReplaceAll(s, "<em>", "\n.B ");
+	findAndReplaceAll(s, "</em>", "\n");
+
+	findAndReplaceAll(s, "<strong>", "\n.B ");
+	findAndReplaceAll(s, "</strong>", "\n");
+
+	findAndReplaceAll(s, "<blockquote>", "\n_______________________________________________________________________\n.RS 1\n");
+	findAndReplaceAll(s, "</blockquote>",".RE 1\n_______________________________________________________________________\n");
 
 	return s;
 }
@@ -64,7 +72,7 @@ void	Query::ParseAnswers(rapidjson::Value::Object o)
 	question	= sanitizeInput(o["body"].GetString());
 	title		= o["title"].GetString();
 
-	for (size_t i = 0; i < 1; i++)
+	for (size_t i = 0; i < o["answers"].GetArray().Size(); i++)
 	{
 		answer a;
 		a.name = o["answers"][i]["owner"]["display_name"].GetString();

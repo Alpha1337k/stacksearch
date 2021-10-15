@@ -2,7 +2,7 @@
 
 int	run_groff(std::string &towrite, char **env, int *fdin, int *fdout)
 {
-	char *args[4] = {(char *)"/bin/groff", (char *)"-man", (char *)"-Tutf8", 0};
+	char *args[4] = {(char *)"/bin/groff", (char *)"-man", (char *)"-Tascii", 0};
 	pid_t id;
 
 	if (dup2(fdin[PIPE_RD], STDIN_FILENO) == -1)

@@ -62,7 +62,7 @@ int main(int argc, char **argv, char **env)
 		std::string page = a.Create();
 
 		std::cout << std::time(0) << std::endl;
-		std::cerr << page << std::endl;
+		//std::cerr << page << std::endl;
 
 		display_page(page, env);
 
