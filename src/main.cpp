@@ -53,25 +53,24 @@ int main(int argc, char **argv, char **env)
 	rapidjson::Document d;
 	d.Parse(api_rv.c_str());
 
-
-	for (size_t i = 0; i < d["items"].GetArray().Size(); i++)
+	if (d["items"].GetArray().Empty())
 	{
-		Query a(d["items"][i].GetObject());
-		//rapidjson::Document answersDom;
-		//answersDom.Parse(getAnswers("").c_str());
-		//a.ParseAnswers(answersDom["items"][0].GetObject());
-
-		std::string page = a.Create();
-
-		//std::cout << std::time(0) << std::endl;
-		//std::cerr << page << std::endl;
-
-		display_page(page, env);
-
-		//std::cout << std::time(0) << std::endl;
-
-		std::cout << "Press 'Q' to quit, 'C' to proceed to next entry" << std::endl;
-
-		break;
+		std::cout << "stacksearch: error: no questions found for '" << argv[1] << "'." << std::endl;
 	}
+	else if (d["quota_remaining"].GetInt() == 0)
+	{
+		std::cout << "stacksearch: error: daily quota filled." << std::endl;
+	}
+	else
+	{
+		for (size_t i = 0; i < d["items"].GetArray().Size(); i++)
+		{
+			Query a(d["items"][i].GetObject());
+			std::string page = a.Create();
+			display_page(page, env);
+
+			std::cout << "Press 'Q' to quit, 'C' to proceed to next entry" << std::endl;
+		}
+	}
+	return (0);
 }

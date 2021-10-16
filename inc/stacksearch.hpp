@@ -48,5 +48,7 @@ public:
 
 int	display_page(std::string &towrite, char **env);
 std::string getQuery(std::string param, char **env);
+void		findAndReplaceAll(std::string &s, std::string tofind, std::string toreplace);
+
 void test();
 #endif
