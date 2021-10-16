@@ -5,14 +5,14 @@ int	run_groff(std::string &towrite, char **env, int *fdin, int *fdout)
 	char *args[4] = {(char *)"/bin/groff", (char *)"-man", (char *)"-Tutf8", 0};
 	pid_t id;
 
-	if (dup2(fdin[PIPE_RD], STDIN_FILENO) == -1)
-	{
-		std::cerr << "syscalls forks failed!" << std::endl;
-		exit(-1);
-	}
 	id = fork();
 	if (id == 0)
 	{
+		if (dup2(fdin[PIPE_RD], STDIN_FILENO) == -1)
+		{
+			std::cerr << "syscalls forks failed!" << std::endl;
+			exit(-1);
+		}
 		if (dup2(fdout[PIPE_WR], STDOUT_FILENO) == -1)
 		{
 			std::cerr << "syscalls forks failed!" << std::endl;
@@ -45,14 +45,14 @@ int	run_groff(std::string &towrite, char **env, int *fdin, int *fdout)
 int	run_less(char **env, int *fd)
 {
 	char *args[3] = {(char *)"/bin/less", (char *)"-R", 0};
-	if (dup2(fd[PIPE_RD], STDIN_FILENO) == -1)
-	{
-		std::cerr << "syscalls forks failed!" << std::endl;
-		exit(-1);
-	}
 	pid_t id = fork();
 	if (id == 0)
 	{
+		if (dup2(fd[PIPE_RD], STDIN_FILENO) == -1)
+		{
+			std::cerr << "syscalls forks failed!" << std::endl;
+			exit(-1);
+		}
 		execve(args[0], args, env);
 
 		exit(-1);

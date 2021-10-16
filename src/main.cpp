@@ -68,8 +68,18 @@ int main(int argc, char **argv, char **env)
 			Query a(d["items"][i].GetObject());
 			std::string page = a.Create();
 			display_page(page, env);
+			char c = ' ';
 
-			std::cout << "Press 'Q' to quit, 'C' to proceed to next entry" << std::endl;
+			if (i + 1 == d["items"].GetArray().Size())
+				break;
+			if (i == 0)
+				std::cout << "Press 'Q' to quit, 'C' to proceed to next entry" << std::endl;
+			system("stty raw");
+			std::cin >> c;
+			system("stty cooked");
+			std::cout << '\010';
+			if (c == 'Q' || c == 'q')
+				break;
 		}
 	}
 	return (0);

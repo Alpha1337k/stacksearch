@@ -1,8 +1,11 @@
 #include <stacksearch.hpp>
 
+/*
+	Url created on https://api.stackexchange.com/docs/advanced-search
+*/
 std::string getQuery(std::string param, char **env)
 {
-	std::string url = "https://api.stackexchange.com/2.3/search/advanced?pagesize=1&order=desc&sort=votes&accepted=True&body=" + param +
+	std::string url = "https://api.stackexchange.com/2.3/search/advanced?pagesize=10&order=desc&sort=votes&accepted=True&body=" + param +
 	"&tagged=c&site=stackoverflow&filter=W0YDoPIiQCPY-e";
 	findAndReplaceAll(url, " ", "%20");
 	char *args[4] = {(char *)"/bin/curl", (char *)url.c_str(), (char *)"--compressed", 0};
@@ -10,7 +13,6 @@ std::string getQuery(std::string param, char **env)
 	std::string rval;
 	int	fd[2];
 
-	std::cout << url << std::endl;
 	if (pipe(fd) == -1)
 		return ("");
 	id = fork();
