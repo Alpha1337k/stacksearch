@@ -46,6 +46,19 @@ void		findAndReplaceAll(std::string &s, std::string tofind, std::string toreplac
 
 std::string	Query::sanitizeInput(std::string s)
 {
+	/* ghettoass quote parsing and such */
+
+	findAndReplaceAll(s, "&#39;", "'");
+	findAndReplaceAll(s, "&quot;", "\"");
+	findAndReplaceAll(s, "&lt;", "<");
+	findAndReplaceAll(s, "&gt;", ">");
+	findAndReplaceAll(s, "&le;", "<=");
+	findAndReplaceAll(s, "&ge;", ">=");
+	findAndReplaceAll(s, "&ne;", "!=");
+	findAndReplaceAll(s, "&eq;", "==");
+
+
+
 	// findAndReplaceAll(s, "\n\n", "");
 	//  // i want color but i doenst work..
 	// findAndReplaceAll(s, "<code>", "\n.I ");
