@@ -3,12 +3,12 @@
 /*
 	Url created on https://api.stackexchange.com/docs/advanced-search
 */
-std::string getQuery(std::string param, char **env)
+std::string getQuery(std::string param)
 {
 	std::string url = "https://api.stackexchange.com/2.3/search/advanced?pagesize=10&order=desc&sort=votes&accepted=True&body=" + param +
 	"&tagged=c&site=stackoverflow&filter=W0YDoPIiQCPY-e";
 	findAndReplaceAll(url, " ", "%20");
-	char *args[4] = {(char *)"/bin/curl", (char *)url.c_str(), (char *)"--compressed", 0};
+	char *args[] = {(char *)"curl", (char *)url.c_str(), (char *)"--compressed", (char *)"-k", 0};
 	pid_t id;
 	std::string rval;
 	int	fd[2];
@@ -24,8 +24,8 @@ std::string getQuery(std::string param, char **env)
 		close(fd[PIPE_RD]);
 		close(fd[PIPE_WR]);
 		close(2);
-		execve(args[0], args, env);
-		exit(0);	
+		execvp(args[0], args);
+		exit(-2);	
 	}
 	else
 	{
@@ -44,6 +44,11 @@ std::string getQuery(std::string param, char **env)
 			}
 		} while (ret > 0);
 		close(fd[PIPE_RD]);
+		int status = 0;
+		waitpid(id, &status, 0);
+
+		if (WEXITSTATUS(status) == -2)
+			throw std::invalid_argument(ERROR_START + "curl failed");
 	}
 	return rval;
 }

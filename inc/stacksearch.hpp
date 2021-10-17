@@ -8,11 +8,13 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include <exception>
 #include "../rapidjson-1.1.0/include/rapidjson/document.h"
 #include "../rapidjson-1.1.0/include/rapidjson/writer.h"
 #include "../rapidjson-1.1.0/include/rapidjson/stringbuffer.h"
 #include <ctime>
 
+#define ERROR_START std::string("stacksearch: error: ")
 
 #define PIPE_WR 1
 #define PIPE_RD 0
@@ -46,8 +48,8 @@ public:
 };
 
 
-int	display_page(std::string &towrite, char **env);
-std::string getQuery(std::string param, char **env);
+int	display_page(std::string &towrite);
+std::string getQuery(std::string param);
 void		findAndReplaceAll(std::string &s, std::string tofind, std::string toreplace);
 
 void test();

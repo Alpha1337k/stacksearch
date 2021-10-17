@@ -38,7 +38,7 @@ std::string	getAnswers(std::string tags)
 	return js;
 }
 
-int main(int argc, char **argv, char **env)
+int main(int argc, char **argv)
 {
 	if (argc < 2)
 	{
@@ -46,20 +46,29 @@ int main(int argc, char **argv, char **env)
 		"try 'stacksearch --help for more information." << std::endl;
 		return 1;
 	}
-	(void)argv;
-	
-	std::string api_rv = getQuery(argv[1], env);
+	std::string api_rv;
+	try
+	{
+		api_rv = getQuery(argv[1]);
+		if (api_rv.length() == 0)
+			throw std::invalid_argument(ERROR_START + "curl failed");
+	}
+	catch (std::exception &e)
+	{
+		std::cout << e.what() << std::endl;
+		return (1);
+	}
 
 	rapidjson::Document d;
 	d.Parse(api_rv.c_str());
 
 	if (d["items"].GetArray().Empty())
 	{
-		std::cout << "stacksearch: error: no questions found for '" << argv[1] << "'." << std::endl;
+		std::cout << ERROR_START + "no questions found for '" << argv[1] << "'." << std::endl;
 	}
 	else if (d["quota_remaining"].GetInt() == 0)
 	{
-		std::cout << "stacksearch: error: daily quota filled." << std::endl;
+		std::cout << ERROR_START + "error: daily quota filled." << std::endl;
 	}
 	else
 	{
@@ -67,7 +76,7 @@ int main(int argc, char **argv, char **env)
 		{
 			Query a(d["items"][i].GetObject());
 			std::string page = a.Create();
-			display_page(page, env);
+			display_page(page);
 			char c = ' ';
 
 			if (i + 1 == d["items"].GetArray().Size())

@@ -1,8 +1,8 @@
 #include <stacksearch.hpp>
 
-int	run_groff(std::string &towrite, char **env, int *fdin, int *fdout)
+int	run_groff(std::string &towrite, int *fdin, int *fdout)
 {
-	char *args[4] = {(char *)"/bin/groff", (char *)"-man", (char *)"-Tutf8", 0};
+	char *args[4] = {(char *)"groff", (char *)"-man", (char *)"-Tutf8", 0};
 	pid_t id;
 
 	id = fork();
@@ -20,7 +20,7 @@ int	run_groff(std::string &towrite, char **env, int *fdin, int *fdout)
 		}
 		close(fdin[PIPE_RD]);
 		close(fdin[PIPE_WR]);
-		execve(args[0], args, env);
+		execvp(args[0], args);
 		std::cerr << "error exec" << std::endl;
 		exit (-1);
 	}
@@ -42,9 +42,9 @@ int	run_groff(std::string &towrite, char **env, int *fdin, int *fdout)
 	return (0);
 }
 
-int	run_less(char **env, int *fd)
+int	run_less(int *fd)
 {
-	char *args[3] = {(char *)"/bin/less", (char *)"-R", 0};
+	char *args[3] = {(char *)"less", (char *)"-R", 0};
 	pid_t id = fork();
 	if (id == 0)
 	{
@@ -53,8 +53,7 @@ int	run_less(char **env, int *fd)
 			std::cerr << "syscalls forks failed!" << std::endl;
 			exit(-1);
 		}
-		execve(args[0], args, env);
-
+		execvp(args[0], args);
 		exit(-1);
 	}
 	else
@@ -67,19 +66,18 @@ int	run_less(char **env, int *fd)
 }
 
 
-int	display_page(std::string &towrite, char **env)
+int	display_page(std::string &towrite)
 {
 	int fd_groff[2];
 	int fd_less[2];
-
 
 	if (pipe(fd_groff) != 0 || pipe(fd_less) != 0)
 	{
 		std::cerr << "syscalls pipe failed!" << std::endl;
 		exit(-1);		
 	}
-	run_groff(towrite, env, fd_groff, fd_less);
-	run_less(env, fd_less);
+	run_groff(towrite, fd_groff, fd_less);
+	run_less(fd_less);
 
 	return (0);
 }
