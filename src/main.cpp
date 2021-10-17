@@ -62,7 +62,11 @@ int main(int argc, char **argv)
 	rapidjson::Document d;
 	d.Parse(api_rv.c_str());
 
-	if (d["items"].GetArray().Empty())
+	if (d.HasMember("error_id"))
+	{
+		std::cout << ERROR_START + "api fail: " << d["error_message"].GetString() << std::endl;
+	}
+	else if (d["items"].GetArray().Empty())
 	{
 		std::cout << ERROR_START + "no questions found for '" << argv[1] << "'." << std::endl;
 	}

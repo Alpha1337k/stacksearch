@@ -1,12 +1,12 @@
 #include <stacksearch.hpp>
 
 /*
-	Url created on https://api.stackexchange.com/docs/advanced-search
+	Url created on https://api.stackexchange.com/docs/advanced-search#pagesize=10&order=desc&sort=votes&body=%20&filter=!6VvPDzPz(ezQY&site=stackoverflow
 */
 std::string getQuery(std::string param)
 {
-	std::string url = "https://api.stackexchange.com/2.3/search/advanced?pagesize=10&order=desc&sort=votes&accepted=True&body=" + param +
-	"&tagged=c&site=stackoverflow&filter=W0YDoPIiQCPY-e";
+	std::string url = "https://api.stackexchange.com/2.3/search/advanced?pagesize=1&order=desc&sort=votes&body=" + param +
+	"&site=stackoverflow&filter=!*MZqiH2nLdWUlVNU";
 	findAndReplaceAll(url, " ", "%20");
 	char *args[] = {(char *)"curl", (char *)url.c_str(), (char *)"--compressed", (char *)"-k", 0};
 	pid_t id;
@@ -18,7 +18,6 @@ std::string getQuery(std::string param)
 	id = fork();
 	if (id == 0)
 	{
-
 		if (dup2(fd[PIPE_WR], STDOUT_FILENO) == -1)
 			exit(-1);
 		close(fd[PIPE_RD]);
